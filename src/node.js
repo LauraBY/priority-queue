@@ -8,10 +8,10 @@ class Node {
 	}
 
 	appendChild(node) {
-		if (this.left != null && this.right != null){
+		if (this.left != null && this.right != null) {
 			return
 		}
-		
+
 		if (this.left == null) {
 			this.left = node;
 		} else {
@@ -20,7 +20,14 @@ class Node {
 	}
 
 	removeChild(node) {
-
+		if (this.left == node) {
+			this.left = null;
+		} else if (this.right == node) {
+			 this.right = null;
+		} else {
+		 	const err = new Error('incorrect child');
+			throw err;
+		}
 	}
 
 	remove() {
