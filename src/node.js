@@ -52,22 +52,47 @@ class Node {
 		}
 
 		var parent = this.parent;
-		var parentOfParent = this.parent.parent;
+		var parentOfParent = parent.parent;
+		var parentLeft = parent.left;
+		var parentRight = parent.right;
 
 		parent.parent = this; // updates parent.parent
 
 		this.parent = parentOfParent; // updates child.parent
 
-		// parent.left.parent = this; // updates parent.child.parent
+		 parent.left= this.left;
+		 parent.right = this.right;
 
-		// // updates children of node and parent node
-		// var parentLeft = parent.left;
-		// var parentRight = parent.right;
-		// parent.left = this.left;
-		// parent.right = this.right;
-		// this.left = parentLeft;
-		// this.right = parentRight;
+		if(parentLeft ==this){
+			this.left = parent
+		} else{
+			this.left = parentLeft;
+		}
+
+		if(this.left !=null){
+			this.left.parent = this;
+		}
+
+		if(parentRight ==this){
+			this.right = parent;
+		} else{
+			this.right = parentRight;
+
+		}
+
+		if(this.right !=null){
+			this.right.parent = this;
+		}
+
+		if(parentOfParent !=null && parentOfParent.left == parent) {
+			parentOfParent.left = this;
+		}
+
+		if(parentOfParent != null &&parentOfParent.right ==parent){
+			parentOfParent.right = this;
+		}
 	}
 }
+
 
 module.exports = Node;
