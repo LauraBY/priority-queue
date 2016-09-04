@@ -4,12 +4,15 @@ class MaxHeap {
 	constructor() {
 		this.root = null;
 		this.parentNodes = [];
+		this.heapSize = 0;
 	}
 
 	push(data, priority) {
 		var node = new Node(data, priority);
 		this.insertNode(node);
 		this.shiftNodeUp(node);
+
+		this.heapSize = this.heapSize + 1;
 	}
 
 	pop() {
@@ -21,6 +24,8 @@ class MaxHeap {
 		this.restoreRootFromLastInsertedNode(root);
 		this.shiftNodeDown(this.root);
 
+		this.heapSize = this.heapSize - 1;
+
 		return root.data;
 	}
 
@@ -28,7 +33,7 @@ class MaxHeap {
 		var root = this.root;
 		var rootIndex = this.parentNodes.indexOf(root);
 
-		if(rootINdex >= 0){
+		if(rootIndex >= 0){
 			this.parentNodes.splice(rootIndex, 1);
 		}
 		this.root = null;
@@ -69,7 +74,7 @@ class MaxHeap {
 	}
 
 	size() {
-
+		return this.heapSize;
 	}
 
 	isEmpty() {
@@ -79,6 +84,7 @@ class MaxHeap {
 	clear() {
 		this.root = null;
 		this.parentNodes = [];
+		this.heapSize = 0;
 	}
 
 	insertNode(node) {
