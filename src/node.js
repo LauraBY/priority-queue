@@ -13,6 +13,10 @@ class Node {
 			return
 		}
 
+		if (node == null) {
+			return
+		}
+
 		if (this.left == null) {
 			this.left = node;
 			this.left.parent = this; // создаем обратную связь ребенка с родителем
@@ -23,6 +27,10 @@ class Node {
 	}
 
 	removeChild(node) {
+		if (node == null) {
+			return
+		}
+
 		if (this.left == node) {
 			this.left.parent = null;
 			this.left = null;
@@ -30,8 +38,7 @@ class Node {
 			this.right.parent = null;
 			this.right = null;
 		} else {
-		 	const err = new Error('incorrect child');
-			throw err;
+			throw new Error('incorrect child');
 		}
 	}
 
@@ -55,42 +62,33 @@ class Node {
 		var parentOfParent = parent.parent;
 		var parentLeft = parent.left;
 		var parentRight = parent.right;
+		var left = this.left;
+		var right = this.right;
 
-		parent.parent = this; // updates parent.parent
+		if (parentOfParent != null) {
+			parentOfParent.removeChild(parent);
+		}
+		parent.removeChild(parentLeft);
+		parent.removeChild(parentRight);
+		this.removeChild(left);
+		this.removeChild(right);
 
-		this.parent = parentOfParent; // updates child.parent
-
-		 parent.left= this.left;
-		 parent.right = this.right;
-
-		if(parentLeft ==this){
-			this.left = parent
-		} else{
-			this.left = parentLeft;
+		if (parentOfParent != null) {
+			parentOfParent.appendChild(this);
+		}
+		if (parentLeft == this) {
+			this.appendChild(parent);
+		} else {
+			this.appendChild(parentLeft);
+		}
+		if (parentRight == this) {
+			this.appendChild(parent);
+		} else {
+			this.appendChild(parentRight);
 		}
 
-		if(this.left !=null){
-			this.left.parent = this;
-		}
-
-		if(parentRight ==this){
-			this.right = parent;
-		} else{
-			this.right = parentRight;
-
-		}
-
-		if(this.right !=null){
-			this.right.parent = this;
-		}
-
-		if(parentOfParent !=null && parentOfParent.left == parent) {
-			parentOfParent.left = this;
-		}
-
-		if(parentOfParent != null &&parentOfParent.right ==parent){
-			parentOfParent.right = this;
-		}
+		parent.appendChild(left);
+		parent.appendChild(right);
 	}
 }
 
