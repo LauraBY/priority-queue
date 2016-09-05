@@ -24,6 +24,11 @@ class MaxHeap {
 		this.restoreRootFromLastInsertedNode(root);
 		this.shiftNodeDown(this.root);
 
+		if (this.root != null) {
+			this.shiftNodeDown(this.root.left);
+			this.shiftNodeDown(this.root.right);
+		}
+
 		this.heapSize = this.heapSize - 1;
 
 		return root.data;
@@ -33,9 +38,10 @@ class MaxHeap {
 		var root = this.root;
 		var rootIndex = this.parentNodes.indexOf(root);
 
-		if(rootIndex >= 0){
+		if (rootIndex >= 0) {
 			this.parentNodes.splice(rootIndex, 1);
 		}
+
 		this.root = null;
 
 		return root;
@@ -59,18 +65,13 @@ class MaxHeap {
 
 		this.root = last;
 
-		var lastIndex = this.parentNodes.indexOf(last);
-		if (lastIndex >= 0) {
-			this.parentNodes.splice(lastIndex, 1);
-		}
+		this.parentNodes = this.branchParentNodes(this.root);
 
-		if (last.left == null || last.right == null) {
-			this.parentNodes.unshift(last);
-		}
-
-		if (left != null) {
+		if (left != null && last != left) {
 			this.insertNode(left);
 		}
+
+		this.parentNodes = this.branchParentNodes(this.root);
 	}
 
 	size() {
@@ -88,15 +89,16 @@ class MaxHeap {
 	}
 
 	insertNode(node) {
-		if (this.root == null){
-			 this.root = node;
-		} else{
+		if (this.root == null) {
+			this.root = node;
+		} else {
 			this.parentNodes[0].appendChild(node);
 
 			if (this.parentNodes[0].left != null && this.parentNodes[0].right != null) {
 				this.parentNodes.shift();
 			}
 		}
+
 		this.parentNodes.push(node);
 	}
 
@@ -107,11 +109,11 @@ class MaxHeap {
 			var nodeIndex = this.parentNodes.indexOf(node);
 			var parentIndex = this.parentNodes.indexOf(parent);
 
-			if(nodeIndex >= 0) {
+			if (nodeIndex >= 0) {
 				this.parentNodes[nodeIndex] = parent;
 			}
 
-			if (parentIndex >= 0){
+			if (parentIndex >= 0) {
 				this.parentNodes[parentIndex] = node;
 			}
 
@@ -119,7 +121,7 @@ class MaxHeap {
 			this.shiftNodeUp(node);
 		}
 
-		if (node.parent == null){
+		if (node.parent == null) {
 			this.root = node;
 		}
 	}
@@ -158,6 +160,26 @@ class MaxHeap {
 
 			this.shiftNodeDown(node);
 		}
+	}
+
+	branchParentNodes(node) {
+		var parentNodes = [];
+
+		if (node.left == null || node.right == null) {
+			parentNodes.push(node);
+		}
+
+		if (node.left != null) {
+			var nodes = this.branchParentNodes(node.left);
+			nodes.forEach(n => {parentNodes.push(n)});
+		}
+
+		if (node.right != null) {
+			var nodes = this.branchParentNodes(node.right);
+			nodes.forEach(n => {parentNodes.push(n)});
+		}
+
+		return parentNodes;
 	}
 }
 
